@@ -36,7 +36,6 @@
             </GmapMap>
           </v-col>
         </v-row>
-        <v-btn @click="fetchResults()">Rechercher</v-btn>
         <Home />
       </v-container>
     </v-main>
@@ -52,15 +51,13 @@ import Home from "./views/Home.vue";
 export default class App extends Vue {
   place = { lng: 2.3522219, lat: 48.856614, dist: 100 };
 
-  updatePlace(what: any) {
+  async updatePlace(what: any) {
     this.place = {
       lat: what.geometry.location.lat(),
       lng: what.geometry.location.lng(),
       dist: 100,
     };
     this.$store.commit("setSearch", this.place);
-  }
-  async fetchResults() {
     await this.$store.dispatch("fetchResultsFromLocation", this.place);
   }
 }
