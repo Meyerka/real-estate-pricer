@@ -1,21 +1,47 @@
 <template>
   <v-app>
+    <v-navigation-drawer
+      app
+      v-model="drawer"
+      :mini-variant.sync="mini"
+      permanent
+    >
+      <v-list-item class="px-2">
+        <v-btn icon @click.stop="mini = !mini">
+          <v-icon>mdi-chevron-left</v-icon>
+        </v-btn>
+      </v-list-item>
+
+      <v-divider></v-divider>
+
+      <v-list dense>
+        <v-list-item v-for="item in items" :key="item.title" link>
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
     <v-main>
       <v-container>
         <v-row>
           <v-col cols="3"></v-col>
-          <v-col cols ="6">
-          <div class="form__group field">
-            <gmap-autocomplete
-              class="form__field"
-              name="name"
-              id="name"
-              default-place="Paris"
-              @place_changed="updatePlace"
-            >
-            </gmap-autocomplete>
-            <label for="name" class="form__label">Adresse</label>
-          </div>
+          <v-col cols="6">
+            <div class="form__group field">
+              <gmap-autocomplete
+                class="form__field"
+                name="name"
+                id="name"
+                default-place="Paris"
+                @place_changed="updatePlace"
+              >
+              </gmap-autocomplete>
+              <label for="name" class="form__label">Adresse</label>
+            </div>
           </v-col>
         </v-row>
         <v-row>
@@ -50,6 +76,13 @@ import Home from "./views/Home.vue";
 })
 export default class App extends Vue {
   place = { lng: 2.3522219, lat: 48.856614, dist: 100 };
+  drawer = true;
+  mini = true;
+  items = [
+          { title: 'Liste', icon: 'mdi-clipboard-list' },
+          { title: 'Infos', icon: 'mdi-database-search' },
+          { title: 'Evolutions', icon: 'mdi-chart-box' },
+        ];
 
   async updatePlace(what: any) {
     this.place = {
@@ -67,7 +100,6 @@ $primary: #314247;
 $secondary: #647973;
 $white: #fff;
 $gray: #6b7b8c;
-
 
 .form__group {
   position: relative;
@@ -127,7 +159,7 @@ $gray: #6b7b8c;
   border-image: linear-gradient(to right, $primary, $secondary);
   border-image-slice: 1;
   width: 100%;
-    display: block;
+  display: block;
 }
 /* reset input */
 .form__field {
@@ -136,6 +168,6 @@ $gray: #6b7b8c;
     box-shadow: none;
   }
   width: 100%;
-    display: block;
+  display: block;
 }
 </style>
