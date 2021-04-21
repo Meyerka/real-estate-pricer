@@ -25,47 +25,19 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { Component, Vue } from "vue-property-decorator";
 import Home from "./views/Home.vue";
+@Component({
+  components: {Home},
+})
+export default class App extends Vue {
+    place = {};
 
-export default Vue.extend({
-  name: "App",
-
-  components: {
-    Home,
-  },
-
-  data: () => ({
-    place: {},
-    center: {
-      lat: 10.0,
-      lng: 10.0,
-    },
-    markers: [
-      {
-        position: {
-          lat: 10.0,
-          lng: 10.0,
-        },
-      },
-      {
-        position: {
-          lat: 11.0,
-          lng: 11.0,
-        },
-      },
-    ],
-  }),
-  methods: {
           updatePlace(what: any) {
-            console.log(what)
-            console.log("hfm")
-
             this.place = {
               lat: what.geometry.location.lat(),
               lng: what.geometry.location.lng()
             };
           }
-  }
-});
+}
 </script>
