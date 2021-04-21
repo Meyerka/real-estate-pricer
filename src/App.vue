@@ -1,25 +1,32 @@
 <template>
   <v-app>
     <v-main>
-      <gmap-place-input default-place="Singapore" @place_changed="updatePlace">
-    </gmap-place-input>
-    {{place && place.lat}}, {{place && place.lng}},
-      <!-- <GmapMap
-        :center="{ lat: 48, lng: 2 }"
-        :zoom="7"
+      <v-container>
+        <v-row>
+      <gmap-place-input default-place="Paris" @place_changed="updatePlace">
+      </gmap-place-input>
+      {{ place && place.lat }}, {{ place && place.lng }}
+      </v-row>
+      <v-row>
+        <v-col cols="3"></v-col>
+        <v-col>
+      <GmapMap
+        :center="place"
+        :zoom="15"
         map-type-id="terrain"
         style="width: 500px; height: 300px"
       >
         <GmapMarker
-          :key="index"
-          v-for="(m, index) in markers"
-          :position="m.position"
+          :position="place"
           :clickable="true"
           :draggable="true"
-          @click="center = m.position"
+          @click="center = place"
         />
-      </GmapMap> -->
+      </GmapMap>
+      </v-col>
+      </v-row>
       <Home />
+    </v-container>
     </v-main>
   </v-app>
 </template>
@@ -28,16 +35,16 @@
 import { Component, Vue } from "vue-property-decorator";
 import Home from "./views/Home.vue";
 @Component({
-  components: {Home},
+  components: { Home },
 })
 export default class App extends Vue {
-    place = {};
+  place = {lng: 2.3522219, lat: 48.856614};
 
-          updatePlace(what: any) {
-            this.place = {
-              lat: what.geometry.location.lat(),
-              lng: what.geometry.location.lng()
-            };
-          }
+  updatePlace(what: any) {
+    this.place = {
+      lat: what.geometry.location.lat(),
+      lng: what.geometry.location.lng(),
+    };
+  }
 }
 </script>
