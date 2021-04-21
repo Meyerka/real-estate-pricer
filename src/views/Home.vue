@@ -1,37 +1,21 @@
 <template>
+  <v-card>
+    <v-card-title>
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Search"
+        single-line
+        hide-details
+      ></v-text-field>
+    </v-card-title>
+    <v-data-table
+      :headers="tableHeaders"
+      :items="tableResult"
+      :search="search"
+    ></v-data-table>
+  </v-card>
 
-
-  <v-simple-table>
-    <template v-slot:default>
-      <thead>
-        <tr>
-          <th class="text-left">
-            Adresse
-          </th>
-          <th class="text-left">
-            Taille
-          </th>
-          <th class="text-left">
-            Prix
-          </th>
-          <th class="text-left">
-            Date
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="item in $store.state.results"
-          :key="item.numero_plan"
-        >
-          <td>{{item.numero_voie}} {{ item.voie }}</td>
-          <td>{{ item.surface_lot_1 }}</td>
-          <td>{{ item.valeur_fonciere }}</td>
-          <td>{{ item.date_mutation }}</td>
-        </tr>
-      </tbody>
-    </template>
-  </v-simple-table>
   
 </template>
 
@@ -42,11 +26,21 @@ import axios from "axios";
   components: {},
 })
 export default class Home extends Vue {
-  tableHeaders= [{text: "Adresse", value: "voie"}, {text: "Prix", value: "valeur_fonciere"}, {text: "Surface", value: "surface_lot_1"}]
+  search = '';
+  tableHeaders= [{text: "Adresse", value: "address"}, {text: "Prix", value: "price"}, {text: "Surface", value: "surface"}, {text: "Prix/m2", value: "pricePerSqm"}, {text: "Date", value: "date"}]
 
   get tableResult() {
-    let result = this.$store.state.results.features;
-    result = result.map((i:any) => i.properties); 
+    let result: any = [];
+    for (const item of this.$store.state.results) {
+      result.push({
+        address: item.numero_voie + ", " + item.type_voie + " " + item.voie,
+        price: item.valeur_fonciere,
+        surface: item.surface_lot_1 || item.surface_lot_2,
+        pricePerSqm: (item.valeur_fonciere / (item.surface_lot_1 || item.surface_lot_2)).toFixed(0),
+        date: item.date_mutation,
+      });
+    }
+    
     return result;
   }
 }
