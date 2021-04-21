@@ -6,6 +6,8 @@
       <gmap-place-input default-place="Paris" @place_changed="updatePlace">
       </gmap-place-input>
       {{ place && place.lat }}, {{ place && place.lng }}
+
+      {{$store.state.search}}
       </v-row>
       <v-row>
         <v-col cols="3"></v-col>
@@ -25,7 +27,8 @@
       </GmapMap>
       </v-col>
       </v-row>
-      <Home />
+      <v-btn @click="fetchResults()">Rechercher</v-btn>
+      <Home/>
     </v-container>
     </v-main>
   </v-app>
@@ -38,13 +41,18 @@ import Home from "./views/Home.vue";
   components: { Home },
 })
 export default class App extends Vue {
-  place = {lng: 2.3522219, lat: 48.856614};
+  place = {lng: 2.3522219, lat: 48.856614, dist: 100};
 
   updatePlace(what: any) {
     this.place = {
       lat: what.geometry.location.lat(),
       lng: what.geometry.location.lng(),
+      dist: 100
     };
+    this.$store.commit("setSearch", this.place);
+  }
+  async fetchResults() {
+    await this.$store.dispatch("fetchResultsFromLocation", this.place);
   }
 }
 </script>
